@@ -17,7 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
           downloadBtn.disabled = false;
           
           downloadBtn.onclick = function() {
-            const filename = target.split('/').pop() + '.json';
+            let filename = 'data.json';
+            if (target.includes('balances')) filename = 'balances.json';
+            else if (target.includes('netpositions')) filename = 'netpositions.json';
+            else if (target.includes('orders')) filename = 'orders.json';
+            else if (target.includes('news')) filename = 'news.json';
+
             chrome.runtime.sendMessage({
               type: 'DOWNLOAD_JSON',
               data: stored.data,
