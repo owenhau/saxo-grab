@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "SaxoTrader JSON Grabber",
+  "version": "1.0",
+  "description": "Intercepts and retrieves specific JSON data from SaxoTrader portfolio pages.",
+  "permissions": [
+    "storage",
+    "downloads",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.saxotrader.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.saxotrader.com/d/portfolio/tradingaccounts*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["interceptor.js"],
+      "matches": ["https://www.saxotrader.com/*"]
+    }
+  ]
+}
