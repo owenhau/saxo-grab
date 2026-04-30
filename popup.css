@@ -51,14 +51,37 @@ h3 {
   cursor: not-allowed;
 }
 
-#clear-data {
+.action-buttons {
+  display: flex;
+  gap: 10px;
   margin-top: 10px;
+}
+
+#download-all, #clear-data {
+  flex: 1;
   padding: 8px;
-  background-color: #f44336;
-  color: white;
   border: none;
   cursor: pointer;
   border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+#download-all {
+  background-color: #4CAF50;
+}
+
+#download-all:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+#download-all:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#clear-data {
+  background-color: #f44336;
 }
 
 #clear-data:hover {

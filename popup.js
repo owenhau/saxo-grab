@@ -1,9 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
   const items = document.querySelectorAll('.item');
   const clearBtn = document.getElementById('clear-data');
+  const downloadAllBtn = document.getElementById('download-all');
+
+  function getFilename(target) {
+    if (target.includes('balances')) return 'balances.json';
+    if (target.includes('netpositions')) return 'netpositions.json';
+    if (target.includes('orders')) return 'orders.json';
+    if (target.includes('news')) return 'news.json';
+    return 'data.json';
+  }
 
   function updateStatus() {
     chrome.storage.local.get(null, function(data) {
+      let anyCaptured = false;
       items.forEach(item => {
         const target = item.getAttribute('data-target');
         const key = 'saxo_data_' + target.replace(/\//g, '_');
@@ -12,21 +22,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const downloadBtn = item.querySelector('.download-btn');
 
         if (stored) {
+          anyCaptured = true;
           statusSpan.textContent = 'Captured: ' + new Date(stored.timestamp).toLocaleTimeString();
           statusSpan.classList.add('ready');
           downloadBtn.disabled = false;
           
           downloadBtn.onclick = function() {
-            let filename = 'data.json';
-            if (target.includes('balances')) filename = 'balances.json';
-            else if (target.includes('netpositions')) filename = 'netpositions.json';
-            else if (target.includes('orders')) filename = 'orders.json';
-            else if (target.includes('news')) filename = 'news.json';
-
             chrome.runtime.sendMessage({
               type: 'DOWNLOAD_JSON',
               data: stored.data,
-              filename: filename
+              filename: getFilename(target)
             });
           };
         } else {
@@ -35,8 +40,26 @@ document.addEventListener('DOMContentLoaded', function() {
           downloadBtn.disabled = true;
         }
       });
+      downloadAllBtn.disabled = !anyCaptured;
     });
   }
+
+  downloadAllBtn.addEventListener('click', function() {
+    chrome.storage.local.get(null, function(data) {
+      items.forEach(item => {
+        const target = item.getAttribute('data-target');
+        const key = 'saxo_data_' + target.replace(/\//g, '_');
+        const stored = data[key];
+        if (stored) {
+          chrome.runtime.sendMessage({
+            type: 'DOWNLOAD_JSON',
+            data: stored.data,
+            filename: getFilename(target)
+          });
+        }
+      });
+    });
+  });
 
   clearBtn.addEventListener('click', function() {
     chrome.storage.local.clear(function() {
