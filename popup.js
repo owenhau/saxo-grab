@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
           downloadBtn.disabled = false;
           
           downloadBtn.onclick = function() {
-            const filename = target.split('/').pop() + '_' + stored.timestamp + '.json';
+            const filename = target.split('/').pop() + '.json';
             chrome.runtime.sendMessage({
               type: 'DOWNLOAD_JSON',
               data: stored.data,
