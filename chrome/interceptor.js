@@ -1,17 +1,40 @@
 (function() {
-  const TARGET_URLS = [
+  const SIMPLE_TARGET_URLS = [
     '/oapi/portfolio/v3/balances/subscriptions',
     '/oapi/portfolio/v3/netpositions/subscriptions',
     '/oapi/portfolio/v3/orders/subscriptions',
-    '/oapi/news/v1/subscriptions'
+    '/oapi/news/v1/subscriptions',
+    '/openapi/trade/v1/watchlists/subscriptions'
   ];
 
+  const TRANSACTION_URL = '/openapi/hist/v1/transactions';
+  const EARNINGS_URL = '/openapi/hist/v1/reports/earningsbreakdown/';
+
   function isTarget(url) {
-    return TARGET_URLS.some(target => url.includes(target));
+    if (url.includes(TRANSACTION_URL) || url.includes(EARNINGS_URL)) {
+      try {
+        const urlObj = new URL(url, window.location.origin);
+        const fromDate = urlObj.searchParams.get('FromDate');
+        if (fromDate && new Date(fromDate) < new Date('2025-02-27')) {
+          return true;
+        }
+      } catch (e) {
+        console.error('Saxo Grabber: Error parsing URL for date filtering:', e);
+      }
+      return false;
+    }
+    
+    return SIMPLE_TARGET_URLS.some(target => url.includes(target));
   }
 
   function handleData(url, data) {
-    const target = TARGET_URLS.find(t => url.includes(t));
+    let target = SIMPLE_TARGET_URLS.find(t => url.includes(t));
+    if (url.includes(TRANSACTION_URL)) {
+      target = TRANSACTION_URL;
+    } else if (url.includes(EARNINGS_URL)) {
+      target = EARNINGS_URL;
+    }
+    
     if (target) {
       window.postMessage({
         type: 'SAXO_DATA_INTERCEPTED',
@@ -29,7 +52,7 @@
 
     if (isTarget(url)) {
       const clone = response.clone();
-      clone.json().then(data => handleData(url, data)).catch(e => console.error('Error parsing fetch JSON:', e));
+      clone.json().then(data => handleData(url, data)).catch(e => console.error('Saxo Grabber: Error parsing fetch JSON:', e));
     }
     return response;
   };
@@ -50,7 +73,7 @@
           const data = JSON.parse(this.responseText);
           handleData(this._url, data);
         } catch (e) {
-          console.error('Error parsing XHR JSON:', e);
+          console.error('Saxo Grabber: Error parsing XHR JSON:', e);
         }
       }
     });

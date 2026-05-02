@@ -2,31 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2026-05-01
+
+### Added
+- **Rust Receiver**: Introduced a backend server to store intercepted data in SQLite.
+- **MCP Server**: Integrated a Streamable HTTP MCP server for AI agent data access.
+- **New Targets**: Added monitoring for Transactions, Earnings, and Watchlists.
+- **Historical Filtering**: Implemented `FromDate` filtering for Transactions and Earnings.
+- **Status Dashboard**: Redesigned the extension popup into a live monitoring dashboard.
+- **Debug Mode**: Added `--debug` flag to the receiver for controlled verbosity.
+
+### Changed
+- **Reorganization**: Moved extension files into a dedicated `chrome/` directory.
+- **Data Flow**: Switched from manual downloads to autonomous pushing from the extension to the receiver.
+- **Security**: Updated manifest permissions for local server communication.
+
 ## [1.0.3] - 2026-04-30
 
 ### Added
 - Added "Download All" button to download all captured JSON files at once.
 
-## [1.0.2] - 2026-04-30
-
-### Changed
-- Improved downloaded filenames to be more descriptive (e.g., \`balances.json\`, \`netpositions.json\`).
-
-## [1.0.1] - 2026-04-30
-
-### Changed
-- Removed timestamp suffix from downloaded JSON filenames.
-
 ## [1.0.0] - 2026-04-30
-
-### Added
 - Initial release of the SaxoTrader JSON Grabber extension.
-- Network interception for 4 key SaxoTrader API endpoints:
-    - Balances Subscriptions
-    - Net Positions Subscriptions
-    - Orders Subscriptions
-    - News Subscriptions
-- Popup UI for monitoring capture status and triggering downloads.
-- Background service worker for handling file downloads.
-- Local storage persistence for captured JSON data.
-- Documentation: `AGENTS.md`, `README.md`, and `CHANGELOG.md`.

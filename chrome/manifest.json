@@ -10,7 +10,8 @@
     "scripting"
   ],
   "host_permissions": [
-    "https://www.saxotrader.com/*"
+    "https://www.saxotrader.com/*",
+    "http://127.0.0.1:9876/*"
   ],
   "action": {
     "default_popup": "popup.html"
