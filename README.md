@@ -6,12 +6,12 @@ A system consisting of a Chrome Extension and a Rust-based receiver to intercept
 
 - **Autonomous Interception**: Automatically detects and captures JSON responses from key SaxoTrader API endpoints.
 - **Extended Monitoring**:
-    - Balances, Net Positions, Orders, News.
-    - **Transactions** and **Earnings** (with historical filtering for `FromDate < 2025-02-27`).
-    - **Watchlists**.
+    - Balances, Net Positions, Orders, News, Watchlists.
+    - **Transactions** and **Earnings** (Full historical retrieval, no date limits).
+    - **Stock Charts** (Candlestick data with symbol-based storage).
 - **Live Status Dashboard**: A button-free popup UI showing real-time monitoring status (Waiting, Updating, Success, or Error).
-- **Rust Receiver**: A high-performance backend that receives data from the extension and stores it in a partitioned SQLite database.
-- **Model Context Protocol (MCP)**: Acts as a "Streamable HTTP" MCP server, allowing AI agents to query portfolio data and schema information.
+- **Rust Receiver**: A high-performance backend that receives data from the extension and stores it in a partitioned SQLite database with idempotency checks.
+- **Model Context Protocol (MCP)**: Acts as a "Streamable HTTP" MCP server, allowing AI agents to query portfolio data, transaction history, and stock charts.
 
 ## Architecture
 
@@ -21,7 +21,7 @@ A system consisting of a Chrome Extension and a Rust-based receiver to intercept
     - **Data Push**: Automatically forwards intercepted JSON to the local receiver.
 - **Receiver (`receiver/`)**:
     - **Axum**: Asynchronous web server handling data pushes and MCP connections.
-    - **SQLite (sqlx)**: Partitioned storage with tables per target and indexed timestamps for fast querying.
+    - **SQLite (sqlx)**: Partitioned storage. Standard data is stored by target, while **Transactions** use a structured schema and **Stock Charts** are stored in symbol-specific tables.
     - **MCP Server**: Implements bidirectional NDJSON streaming for AI agent integration.
 
 ## Installation
@@ -45,7 +45,10 @@ A system consisting of a Chrome Extension and a Rust-based receiver to intercept
 1.  Start the **Rust Receiver**.
 2.  Navigate to SaxoTrader. The extension will automatically start pushing data to the receiver.
 3.  Check the extension popup to monitor capture status.
-4.  **AI Integration**: Point your MCP-compatible AI agent to `http://127.0.0.1:9876/mcp` to query the stored data using the `query_stock_data` tool.
+4.  **AI Integration**: Point your MCP-compatible AI agent to `http://127.0.0.1:9876/mcp` to query the stored data using:
+    - `query_stock_data`: General purpose target retrieval.
+    - `search_transactions`: Structured transaction history search.
+    - `query_stock_history`: Historical price records for specific symbols.
 
 ## Security Note
 

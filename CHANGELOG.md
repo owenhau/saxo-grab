@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2026-05-29
+
+### Added
+- **Structured Transactions**: Transactions are now stored in a dedicated table with columns for symbols, dates, and amounts for faster querying.
+- **Idempotent Storage**: Implemented deduplication for transactions using `BkRecordId` as a Primary Key.
+- **Stock Charts Support**: Added interception for `stockCharts` with automatic symbol-based table partitioning.
+- **Advanced MCP Tools**:
+    - `search_transactions`: Filter transactions by date range or instrument symbol.
+    - `query_stock_history`: Retrieve historical price data for specific symbols with smart matching.
+
+### Changed
+- **Filter Removal**: Removed the hardcoded `FromDate` restriction; the system now monitors and captures all transaction history records.
+
 ## [2.0.0] - 2026-05-01
 
 ### Added
