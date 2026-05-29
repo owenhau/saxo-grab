@@ -1,2 +1,17 @@
-receiver/target/
-receiver/saxo_data.db*
+# Rust
+/receiver/target/
+**/*.rs.bk
+
+# SQLite
+/receiver/*.db
+/receiver/*.db-journal
+/receiver/*.db-shm
+/receiver/*.db-wal
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

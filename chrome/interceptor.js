@@ -4,7 +4,8 @@
     '/oapi/portfolio/v3/netpositions/subscriptions',
     '/oapi/portfolio/v3/orders/subscriptions',
     '/oapi/news/v1/subscriptions',
-    '/openapi/trade/v1/watchlists/subscriptions'
+    '/openapi/trade/v1/watchlists/subscriptions',
+    '/openapi/chart/v3/charts/subscriptions'
   ];
 
   const TRANSACTION_URL = '/openapi/hist/v1/transactions';
@@ -12,16 +13,7 @@
 
   function isTarget(url) {
     if (url.includes(TRANSACTION_URL) || url.includes(EARNINGS_URL)) {
-      try {
-        const urlObj = new URL(url, window.location.origin);
-        const fromDate = urlObj.searchParams.get('FromDate');
-        if (fromDate && new Date(fromDate) < new Date('2025-02-27')) {
-          return true;
-        }
-      } catch (e) {
-        console.error('Saxo Grabber: Error parsing URL for date filtering:', e);
-      }
-      return false;
+      return true;
     }
     
     return SIMPLE_TARGET_URLS.some(target => url.includes(target));

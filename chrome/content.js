@@ -31,6 +31,7 @@ window.addEventListener('message', function(event) {
   else if (target.includes('transactions')) targetName = 'transactions';
   else if (target.includes('earningsbreakdown')) targetName = 'earnings';
   else if (target.includes('watchlists')) targetName = 'watchlists';
+  else if (target.includes('charts')) targetName = 'stockCharts';
 
   if (targetName === 'unknown') return;
 
